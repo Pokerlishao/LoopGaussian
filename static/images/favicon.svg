@@ -1,0 +1,8 @@
+<svg width="600" height="600" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>Layer 1</title>
+  <ellipse stroke-dasharray="5,5" ry="300" rx="300" id="svg_4" cy="300" cx="300" stroke="#000" fill="#84D3DB"/>
+  <text transform="rotate(-5 297.304 286.478) matrix(2.75262 0 0 4.70122 -371.009 -785.425)" stroke="#000" xml:space="preserve" text-anchor="start" font-family="'Lemonada'" font-size="24" id="svg_3" y="236.31226" x="145.5086" stroke-width="0" fill="#000000">LoopGaussian</text>
+ </g>
+</svg>

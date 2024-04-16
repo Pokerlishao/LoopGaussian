@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="">
+  <meta name="keywords" content="Cinemagraph">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LoopGaussian: Creating 3D Cinemagraph with Multi-view Images via Eulerian Motion Field</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">LoopGaussian: Creating 3D Cinemagraph with Multi-view Images via Eulerian Motion Field</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="http://pokerlishao.ink">Jiyang Li</a><sup>1*</sup>,
+            </span>
+            <span class="author-block">
+              Lechao Cheng<sup>2*</sup>,
+              <!-- <a href="">Lechao Cheng</a><sup>2*</sup>, -->
+            </span>
+            <span class="author-block">
+              <a href="http://www.cad.zju.edu.cn/home/zywang/">Zhangye Wang</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              Tingting Mu<sup>3</sup>,
+              <!-- <a href="">Tingting Mu</a><sup>3</sup>, -->
+            </span>
+            <span class="author-block">
+              Jingxuan He<sup>2✉</sup>
+              <!-- <a href="">Jingxuan He</a><sup>2✉</sup> -->
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Zhejiang University,</span>
+            <span class="author-block"><sup>2</sup>Hefei University of Technology,</span>
+            <span class="author-block"><sup>3</sup>The University of Manchester</span>
+          </div>
+          *Equal contribution, ✉Corresponding author
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2404.08966"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2404.08966"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code(Coming soon)</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data(Coming soon)</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/teaser.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">LoopGaussian</span> convert multi-view images of a stationary scene (a) into authentic 3D cinemagraph by an Eulerian motion field (b).
+        The 3D cinemagraph can be rendered from a novel viewpoint to obtain a natural seamless loopable video (c). 
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-skull">
+          <video poster="" id="skull" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/skull.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-lfc">
+          <video poster="" id="kfc" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/kfc.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-ficus">
+          <video poster="" id="ficus" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/ficus.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-eflag">
+          <video poster="" id="eflag" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/english_flag.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-pants">
+          <video poster="" id="pants" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/pants.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Cinemagraph is a unique form of visual media that combines elements of still photography and subtle motion to create a captivating experience. However, the majority of videos generated by recent works lack depth information and are confined to the constraints of 2D image space. In this paper, inspired by significant progress in the field of novel view synthesis (NVS) achieved by 3D Gaussian Splatting (3D-GS), we propose \textbf{\textit{LoopGaussian}} to elevate cinemagraph from 2D image space to 3D space using 3D Gaussian modeling. To achieve this, we first employ the 3D-GS method to reconstruct 3D Gaussian point clouds from multi-view images of static scenes, incorporating shape regularization terms to prevent blurring or artifacts caused by object deformation. We then adopt an autoencoder tailored for 3D Gaussian to project it into feature space. To maintain the local continuity of the scene, we devise SuperGaussian for clustering based on the acquired features. By calculating the similarity between clusters and employing a two-stage estimation method, we derive an Eulerian motion field to describe velocities across the entire scene. The 3D Gaussian points then move within the estimated Eulerian motion field. Through bidirectional animation techniques, we ultimately generate a 3D Cinemagraph that exhibits natural and seamlessly loopable dynamics. Experiment results validate the effectiveness of our approach, demonstrating high-quality and visually appealing scene generation. 
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    <!--/ Paper video. -->
+  </div> -->
+</section>
+
+
+<!-- Optical. -->
+<section class="section">
+  <div class="container is-max-desktop">
+
+      <div class="column is-full-width"></div>
+        <h2 class="title is-3">Comparisons</h2>
+          <div class="column content">
+            <p>
+              LoopGaussian (below) vs.  <a href="https://xingyi-li.github.io/3d-cinemagraphy/">3D Cinemagraph</a> (above)
+            </p>
+            <video poster="" id="ficus" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/comparisons.mp4"
+                      type="video/mp4">
+            </video>
+
+    </div>
+  </div>
+<!-- Optical. -->
+
+<!-- NVS. -->
+<section class="section">
+  <div class="container is-max-desktop">
+
+      <div class="column is-full-width"></div>
+        <h2 class="title is-3">Novel view synthesis</h2>
+          <div class="column content">
+            <p>
+              3D Cinemagraph generated by our method can be rendered from any viewpoint.
+            </p>
+            <video poster="" id="ficus" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/ficus_nvs.mp4"
+                      type="video/mp4">
+            </video>
+
+    </div>
+  </div>
+<!--/ NVS. -->
+
+
+<!-- Optical. -->
+<section class="section">
+  <div class="container is-max-desktop">
+
+      <div class="column is-full-width"></div>
+        <h2 class="title is-3">Optical Flow Maps</h2>
+          <div class="column content">
+            <p>
+              The rendering results and corresponding optical flow maps.
+            </p>
+            <video poster="" id="ficus" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/optical.mp4"
+                      type="video/mp4">
+            </video>
+
+    </div>
+  </div>
+<!-- Optical. -->
+
+
+
+      
+    <!-- Concurrent Work. -->
+    <!-- <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Related Links</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            There's a lot of excellent work that was introduced around the same time as ours.
+          </p>
+          <p>
+            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
+          </p>
+          <p>
+            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
+            both use deformation fields to model non-rigid scenes.
+          </p>
+          <p>
+            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>
+          </p>
+          <p>
+            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
+          </p>
+        </div>`
+      </div>
+    </div> -->
+    <!--/ Concurrent Work. -->
+
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{li2024loop,
+  author    = {Jiyang Li and Lechao, Cheng and Zhangye, Wang and Tingting, Mu and Jingxuan, He},
+  title     = {LoopGaussian: Creating 3D Cinemagraph with Multi-view Images via Eulerian Motion Field},
+  year      = {2024},
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/loopgaussian_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <!-- <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p> -->
+          <p>
+            Thanks to <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> for providing us with the website template.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
