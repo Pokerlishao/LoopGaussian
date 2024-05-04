@@ -29,8 +29,6 @@
 
 </div>
 
-## Our code will be released soon!
-
 <!-- ## News -->
 
 ## Environment
@@ -38,11 +36,19 @@
 - Pytorch = 2.1.1
 - Python = 3.11
 
+```bash
+pip install -r requirements.txt
+```
+
 <!-- ## Data Preparation -->
 
-<!-- ## Training -->
+## Training
+```bash
+python train_loop.py --task_name kfc ${task_name}
+```
 
 
+The rendering result will be saved in `output/{task_name}/visual.mp4`
 <!-- ## Rendering -->
 
 
