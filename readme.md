@@ -42,14 +42,20 @@ pip install -r requirements.txt
 
 <!-- ## Data Preparation -->
 
-## Training
+## Train
+### Train 3D-GS
 ```bash
-python train_loop.py --task_name kfc ${task_name}
+python gaussian_splatting/train.py -s {images_path}
 ```
 
+### Train LoopGaussian
+```bash
+python train_loop.py --task_name ${task_name}
+```
 
-The rendering result will be saved in `output/{task_name}/visual.mp4`
 <!-- ## Rendering -->
+The rendering result will be saved in `output/{task_name}/visual.mp4`
+
 
 
 

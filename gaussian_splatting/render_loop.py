@@ -28,11 +28,6 @@ from gaussian_renderer import GaussianModel
 #     image[:, black] = 1.
 #     return image
 
-def generate_mask(gaussians):
-    threshold = -0.5
-    indices = gaussians._xyz[:,2] > threshold
-    print(f'Mask: {indices.shape}')
-    return indices
     
 
 def render_set(model_path, name, iteration, views, gaussians, pipeline, background):
@@ -42,15 +37,10 @@ def render_set(model_path, name, iteration, views, gaussians, pipeline, backgrou
     makedirs(render_path, exist_ok=True)
     makedirs(gts_path, exist_ok=True)
     
-    mask = generate_mask(gaussians)
-
-
     T = 48
-    f_pos = torch.load("./output/f_pos.pt")
-    b_pos = torch.load("./output/b_pos.pt")
+    f_pos = torch.load(f"./output/f_pos.pt")
+    b_pos = torch.load(f"./output/b_pos.pt")
     for idx, view in enumerate(tqdm(views, desc="Rendering progress")):
-        if(idx!=13): continue #eflag 7  kfc 10  ficus 2   pants 5  #dress 9
-        
         # rendering = render(view, gaussians, pipeline, background)["render"]
         # gt = view.original_image[0:3, :, :]
         # torchvision.utils.save_image(rendering, os.path.join(render_path, '{0:05d}'.format(idx) + ".png"))
@@ -59,7 +49,6 @@ def render_set(model_path, name, iteration, views, gaussians, pipeline, backgrou
         for t in trange(T, desc='Render'):
             alpha = t / T
             del_pos = (1-alpha) * f_pos[t] + alpha * b_pos[T-t]
-            gaussians._xyz[mask] = del_pos[mask]
             # gaussians._xyz[mask] = 1e8
             # gaussians._scaling[mask] = -1e12
             view.image_height = 1000
@@ -70,7 +59,7 @@ def render_set(model_path, name, iteration, views, gaussians, pipeline, backgrou
             images.append(rendering.permute(1,2,0))
         images = torch.stack(images, dim=0).detach().cpu()
         images = (images * 255).type(torch.uint8)
-        save_path = f'./output/flow/idea3_eflag_{idx}.mp4'
+        save_path = f'./output/{idx}.mp4'
         torchvision.io.write_video(save_path, images, fps = 24)
         torch.cuda.empty_cache()
         print(f'Save video to {save_path}. Total frames: {images.shape[0]}. Resolution: {images.shape[1]} x {images.shape[2]}')
